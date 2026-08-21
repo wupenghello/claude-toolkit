@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang='zh-cn'>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="renderer" content="webkit">
+  <title>我的地盘-我的任务 - 禅道</title>
+<script>window.config={"webRoot":"\/zentao\/","debug":false,"appName":"","cookieLife":30,"requestType":"PATH_INFO","requestFix":"-","moduleVar":"m","methodVar":"f","viewVar":"t","defaultView":"html","themeRoot":"\/zentao\/theme\/","currentModule":"my","currentMethod":"task","clientLang":"zh-cn","requiredFields":"","router":"\/zentao\/index.php","save":"\u4fdd\u5b58","runMode":"","timeout":30000,"pingInterval":""};
+window.lang={"submitting":"\u7a0d\u5019...","save":"\u4fdd\u5b58","expand":"\u5c55\u5f00\u5168\u90e8","timeout":"\u8fde\u63a5\u8d85\u65f6\uff0c\u8bf7\u68c0\u67e5\u7f51\u7edc\u73af\u5883\uff0c\u6216\u91cd\u8bd5\uff01"};
+
+</script>
+<script>config.onlybody = "no";</script><link rel='stylesheet' href='/zentao/theme/default/zh-cn.default.css?v=12.5.3' type='text/css' media='screen' />
+<script src='/zentao/js/all.js?v=12.5.3'></script>
+<style>.dropdown-menu.with-search {padding: 0; min-width: 150px; overflow: hidden; max-height: 302px;}
+.dropdown-menu > .menu-search .input-group {width:100%;}
+.dropdown-menu > .menu-search .input-group-addon {position: absolute; right: 10px; top: 0; z-index: 10; background: none; border: none; color: #666}
+.dropdown-menu > .menu-search .form-control {border: none!important; box-shadow: none!important; border-top: 1px solid #ddd!important;}
+.dropdown-list {display: block; padding: 0; max-height: 270px; overflow-y: auto;}
+.dropdown-list > li > a {display: block; padding: 3px 20px; clear: both; font-weight: normal; line-height: 1.53846154; color: #141414; white-space: nowrap;}
+.dropdown-list > li > a:hover,
+.dropdown-list > li > a:focus {color: #1a4f85;text-decoration: none;background-color: #ddd;}
+
+.btn-toolbar .nav-title{float:left; display:inline-block; padding: 6px 12px; margin-bottom: 0; font-size: 13px; font-weight: bolder; line-height: 18px; text-align: center; white-space: nowrap; vertical-align: middle;}
+td.delayed{background: #e84e0f!important; color: white;}
+</style><link rel='icon' href='/zentao/favicon.ico' type='image/x-icon' />
+<link rel='shortcut icon' href='/zentao/favicon.ico' type='image/x-icon' />
+<!--[if lt IE 10]>
+<script src='/zentao/js/jquery/placeholder/min.js?v=12.5.3'></script>
+<![endif]-->
+</head>
+<body>
+<style>
+.picker-single .picker-selection-remove{z-index: 1000;}
+.picker-selection-single:after, .picker-multi.picker-focus .picker-selections:before{font-family: ZentaoIcon !important; content: '\f0d7' !important;}
+</style>
+<script>
+var chooseUsersToMail = '选择要发信通知的用户...';
+if($.fn.picker)
+{
+    $(document).ready(function()
+    {
+        $(".picker-select[data-pickertype!='remote']").picker({chosenMode: true});
+        $("[data-pickertype='remote']").each(function()
+        {
+            var pickerremote = $(this).attr('data-pickerremote');
+            $(this).picker({chosenMode: true, remote: pickerremote});
+        })
+    });
+}
+</script>
+<header id='header'>
+  <div id='mainHeader'>
+    <div class='container'>
+      <hgroup id='heading'>
+                <h1 id='companyname' title='供应链项目组'><a href='/zentao/index.html' >供应链项目组</a>
+</h1>
+      </hgroup>
+      <nav id='navbar'><ul class='nav nav-default'>
+<li class='active' data-id='my'><a href='/zentao/my/' class='active'><span> 我的地盘</span></a></li>
+<li  data-id='product'><a href='/zentao/product-index-no.html' >产品</a></li>
+<li  data-id='project'><a href='/zentao/project-index-no.html' >迭代</a></li>
+<li  data-id='qa'><a href='/zentao/qa/' >测试</a></li>
+<li class='divider'></li><li  data-id='doc'><a href='/zentao/doc/' >文档</a></li>
+<li  data-id='report'><a href='/zentao/report/' >统计</a></li>
+</ul>
+</nav>
+      <div id='toolbar'>
+        <div id="userMenu">
+          <div id='searchbox'><div class='input-group'><div class='input-group-btn'><a data-toggle='dropdown' class='btn btn-link'><span id='searchTypeName'>任务</span> <span class='caret'></span></a><input type='hidden' name='searchType' id='searchType' value='task'  />
+<ul id='searchTypeMenu' class='dropdown-menu'><li ><a href='javascript:$.setSearchType("bug");' data-value='bug'>Bug</a></li><li ><a href='javascript:$.setSearchType("story");' data-value='story'>需求</a></li><li class='selected'><a href='javascript:$.setSearchType("task");' data-value='task'>任务</a></li><li ><a href='javascript:$.setSearchType("testcase");' data-value='testcase'>用例</a></li><li ><a href='javascript:$.setSearchType("project");' data-value='project'>迭代</a></li><li ><a href='javascript:$.setSearchType("product");' data-value='product'>产品</a></li><li ><a href='javascript:$.setSearchType("user");' data-value='user'>用户</a></li><li ><a href='javascript:$.setSearchType("build");' data-value='build'>版本</a></li><li ><a href='javascript:$.setSearchType("release");' data-value='release'>发布</a></li><li ><a href='javascript:$.setSearchType("productplan");' data-value='productplan'>产品计划</a></li><li ><a href='javascript:$.setSearchType("testtask");' data-value='testtask'>测试单</a></li><li ><a href='javascript:$.setSearchType("doc");' data-value='doc'>文档</a></li><li ><a href='javascript:$.setSearchType("caselib");' data-value='caselib'>用例库</a></li><li ><a href='javascript:$.setSearchType("testreport");' data-value='testreport'>测试报告</a></li></ul></div><input id='searchInput' class='form-control search-input' type='search' onclick='this.value=""' onkeydown='if(event.keyCode==13) $.gotoObject();' placeholder='编号(ctrl+g)'/></div><a href='javascript:$.gotoObject();' class='btn btn-link' id='searchGo'>GO!</a></div>
+          <ul id="userNav" class="nav nav-default">
+            <li><a class='dropdown-toggle' data-toggle='dropdown'><span class='user-name'>吴鹏</span><span class='caret'></span></a><ul class='dropdown-menu pull-right'><li class="user-profile-item"><a href='/zentao/my-profile.html' class=''><div class='avatar avatar bg-secondary avatar-circle'>W</div>
+<div class="user-profile-name">吴鹏</div><div class="user-profile-role">研发</div></a></li><li class="divider"></li><li><a href='/zentao/my-profile.html' >个人档案</a>
+</li><li><a href='/zentao/my-changepassword.html?onlybody=yes' class='iframe' data-width='500'>更改密码</a>
+</li><li class='divider'></li><li class='dropdown-submenu'><a href='javascript:;'>主题</a><ul class='dropdown-menu pull-left'><li class='selected'><a href='javascript:selectTheme("default");' data-value='default'>禅道蓝（默认）</a></li><li ><a href='javascript:selectTheme("green");' data-value='green'>叶兰绿</a></li><li ><a href='javascript:selectTheme("red");' data-value='red'>赤诚红</a></li><li ><a href='javascript:selectTheme("purple");' data-value='purple'>玉烟紫</a></li><li ><a href='javascript:selectTheme("pink");' data-value='pink'>芙蕖粉</a></li><li ><a href='javascript:selectTheme("blackberry");' data-value='blackberry'>露莓黑</a></li><li ><a href='javascript:selectTheme("classic");' data-value='classic'>经典蓝</a></li></ul></li><li class='dropdown-submenu'><a href='javascript:;'>Language</a><ul class='dropdown-menu pull-left'><li class='selected'><a href='javascript:selectLang("zh-cn");'>简体</a></li><li ><a href='javascript:selectLang("zh-tw");'>繁體</a></li><li ><a href='javascript:selectLang("en");'>English</a></li><li ><a href='javascript:selectLang("de");'>Deutsch</a></li><li ><a href='javascript:selectLang("fr");'>Français</a></li><li ><a href='javascript:selectLang("vi");'>Tiếng Việt</a></li><li ><a href='javascript:selectLang("ja");'>日本語</a></li></ul></li><li class='custom-item'><a href='/zentao/custom-ajaxMenu-my-task.html?onlybody=yes' data-toggle='modal' data-type='iframe' data-icon='cog' data-width='80%'>自定义导航</a></li><li class="divider"></li><li class='dropdown-submenu'><a data-toggle='dropdown'>帮助</a><ul class='dropdown-menu pull-left'><li><a href='/zentao/tutorial-start.html' class='iframe' data-class-name='modal-inverse' data-width='800' data-headerless='true' data-backdrop='true' data-keyboard='true'>新手教程</a>
+</li><li><a href='https://www.zentao.net/book/zentaopmshelp.html?fullScreen=zentao' class='open-help-tab' target='_blank' rel='noopener noreferrer'>手册</a>
+</li><li><a href='/zentao/misc-changeLog.html' class='iframe' data-width='800' data-headerless='true' data-backdrop='true' data-keyboard='true'>修改日志</a>
+</li></ul></li>
+<li><a href='/zentao/misc-about.html' class='about iframe' data-width='1050' data-headerless='true' data-backdrop='true' data-keyboard='true' data-class='modal-about'>关于禅道</a>
+</li><li class="divider"></li><li><a href='/zentao/user-logout.html' >退出</a>
+</li></ul></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id='subHeader'>
+    <div class='container'>
+      <div id="pageNav" class='btn-toolbar'></div>
+      <nav id='subNavbar'><ul class='nav nav-default'>
+<li class=' ' data-id='index'><a href='/zentao/my/' >首页</a>
+</li>
+<li class=' ' data-id='calendar'><a href='/zentao/my-calendar.html' >日程</a>
+</li>
+<li class='divider'></li><li class=' active' data-id='task'><a href='/zentao/my-task.html' >任务</a>
+</li>
+<li class=' ' data-id='bug'><a href='/zentao/my-bug.html' >Bug</a>
+</li>
+<li class=' ' data-id='story'><a href='/zentao/my-story.html' >需求</a>
+</li>
+<li class='divider'></li><li class=' ' data-id='myProject'><a href='/zentao/my-project.html' >迭代</a>
+</li>
+<li class=' ' data-id='dynamic'><a href='/zentao/my-dynamic.html' >动态</a>
+</li>
+<li class='divider'></li><li class=' ' data-id='profile'><a href='/zentao/my-profile.html' >档案</a>
+</li>
+<li class=' ' data-id='changePassword'><a href='/zentao/my-changepassword.html' >密码</a>
+</li>
+<li class=' ' data-id='manageContacts'><a href='/zentao/my-managecontacts.html' >联系人</a>
+</li>
+</ul>
+</nav>
+      <div id="pageActions"><div class='btn-toolbar'></div></div>
+    </div>
+  </div>
+  </header>
+
+<main id='main'  >
+  <div class='container'>
+<div id="mainMenu" class="clearfix">
+  <div class="btn-toolbar pull-left">
+    <a href='/zentao/my-task-assignedTo.html' class='btn btn-link btn-active-text'><span class='text'>指派给我</span> <span class='label label-light label-badge'>1</span></a>
+<a href='/zentao/my-task-openedBy.html' class='btn btn-link'><span class='text'>由我创建</span></a>
+<a href='/zentao/my-task-finishedBy.html' class='btn btn-link'><span class='text'>由我完成</span></a>
+<a href='/zentao/my-task-closedBy.html' class='btn btn-link'><span class='text'>由我关闭</span></a>
+<a href='/zentao/my-task-canceledBy.html' class='btn btn-link'><span class='text'>由我取消</span></a>
+  </div>
+</div>
+<div id="mainContent">
+    <form id='myTaskForm' class="main-table table-task" data-ride="table" method="post">
+            <table class="table has-sort-head table-fixed" id='tasktable'>
+            <thead>
+        <tr>
+          <th class="c-id">
+                        <div class="checkbox-primary check-all" title="全选">
+              <label></label>
+            </div>
+                        <a href='/zentao/my-task-assignedTo-id_asc-0-20-1.html' class='sort-down'>ID</a>
+          </th>
+          <th class='c-pri w-40px'>       <a href='/zentao/my-task-assignedTo-pri_asc-0-20-1.html' class='header'>P</a>
+</th>
+          <th class='c-project'>          <a href='/zentao/my-task-assignedTo-project_asc-0-20-1.html' class='header'>所属迭代</a>
+</th>
+          <th class='c-name'>             <a href='/zentao/my-task-assignedTo-name_asc-0-20-1.html' class='header'>任务名称</a>
+</th>
+          <th class='c-user w-90px'>      <a href='/zentao/my-task-assignedTo-openedBy_asc-0-20-1.html' class='header'>创建</a>
+</th>
+          <th class='w-80px'>             <a href='/zentao/my-task-assignedTo-estStarted_asc-0-20-1.html' class='header'>预计开始</a>
+</th>
+          <th class='w-80px'>             <a href='/zentao/my-task-assignedTo-deadline_asc-0-20-1.html' class='header'>截止</a>
+</th>
+          <th class='w-90px c-assignedTo'><a href='/zentao/my-task-assignedTo-assignedTo_asc-0-20-1.html' class='header'>指派给</a>
+</th>
+          <th class='c-user w-100px'>     <a href='/zentao/my-task-assignedTo-finishedBy_asc-0-20-1.html' class='header'>由谁完成</a>
+</th>
+          <th class='c-hours w-50px'>     <a href='/zentao/my-task-assignedTo-estimate_asc-0-20-1.html' class='header'>预计</a>
+</th>
+          <th class='c-hours w-50px'>     <a href='/zentao/my-task-assignedTo-consumed_asc-0-20-1.html' class='header'>消耗</a>
+</th>
+          <th class='c-hours w-50px'>     <a href='/zentao/my-task-assignedTo-left_asc-0-20-1.html' class='header'>剩余</a>
+</th>
+          <th class='c-status'>           <a href='/zentao/my-task-assignedTo-status_asc-0-20-1.html' class='header'>状态</a>
+</th>
+          <th class='c-actions-6'>        操作</th>
+        </tr>
+      </thead>
+      <tbody>
+                        <tr>
+          <td class="c-id">
+                        <div class="checkbox-primary">
+              <input type='checkbox' name='taskIDList[]' value='8841' />
+              <label></label>
+            </div>
+                        8841          </td>
+          <td class="c-pri"><span class='label-pri label-pri-3' title='3'>3</span></td>
+          <td class='c-project' title="电商-运营后台权限-SCF0050"><a href='/zentao/project-browse-443.html' >电商-运营后台权限-SCF0050</a>
+</td>
+          <td class='c-name' title='【前端】运营后台-新增-提货单 '>
+                                    <a href='/zentao/task-view-8841.html' style='color: '>【前端】运营后台-新增-提货单 </a>
+          </td>
+          <td class='c-user'>胡雪辉</td>
+          <td></td>
+          <td ></td>
+          <td class="c-assignedTo has-btn"> <a href='/zentao/task-assignTo-443-8841.html?onlybody=yes' class='iframe btn btn-icon-left btn-sm '><i class='icon icon-hand-right'></i> <span title='吴鹏' class='text-red'>吴鹏</span></a>
+</td>
+          <td class='c-user'></td>
+          <td class='c-hours'>0</td>
+          <td class='c-hours'>8</td>
+          <td class='c-hours'>8</td>
+          <td class='c-status'>
+                        <span class='status-task status-doing'> 进行中</span>          </td>
+          <td class='c-actions'>
+            <button type='button' class='disabled btn iframe'><i class='icon-task-start disabled icon-play' title='开始' ></i></button>
+<button type='button' class='disabled btn iframe'><i class='icon-task-close disabled icon-off' title='关闭' ></i></button>
+<a href='/zentao/task-finish-8841.html?onlybody=yes' class='btn iframe' title='完成' ><i class='icon-task-finish icon-checked'></i></a>
+<a href='/zentao/task-recordEstimate-8841.html?onlybody=yes' class='btn iframe' title='工时' ><i class='icon-task-recordEstimate icon-time'></i></a>
+<a href='/zentao/task-edit-8841.html' class='btn ' title='编辑任务' ><i class='icon-common-edit icon-edit'></i></a>
+<a href='/zentao/task-batchCreate-443-2235-0-8841-0.html' class='btn ' title='子任务' ><i class='icon-task-batchCreate icon-treemap-alt'></i></a>
+          </td>
+        </tr>
+              </tbody>
+    </table>
+    <div class="table-footer">
+            <div class="checkbox-primary check-all"><label>全选</label></div>
+            <div class="table-actions btn-toolbar">
+       <button type='button' class='btn' onclick="setFormAction('/zentao/task-batchEdit-0-id_desc.html')">编辑</button> <button type='button' class='btn' onclick="setFormAction('/zentao/task-batchClose.html', 'hiddenwin')">关闭</button>      </div>
+      <ul class='pager' data-page-cookie='pagerMyTask' data-ride='pager' data-rec-total='1' data-rec-per-page='20' data-page='1' data-link-creator='/zentao/my-task-assignedTo-id_desc-1-{recPerPage}-{page}.html'></ul>    </div>
+  </form>
+  </div>
+<script>listName = "tasktable";</script>
+</div><script>
+$.initSidebar();
+</script>
+
+<iframe frameborder='0' name='hiddenwin' id='hiddenwin' scrolling='no' class='debugwin hidden'></iframe>
+
+</main><footer id='footer'>
+  <div class="container">
+    <ul class='breadcrumb'><li><a href='/zentao/my/' >禅道</a>
+</li><li><a href='/zentao/my/' ><span> 我的地盘</span></a>
+</li><li class='active'>我的任务</li></ul>    <div id='poweredBy'>
+      <small class='muted'><a href='https://api.zentao.net/goto.php?item=aiux' class='link-aiux' target='_blank'>Designed by <strong>艾体验</strong></a></small> &nbsp;
+      <a href='https://www.zentao.net' target='_blank'><i class='icon-zentao'></i> 禅道12.5.3</a> &nbsp;
+      <a href='https://api.zentao.net/goto.php?item=proversion&from=footer' target='_blank' id='proLink' class='text-important'>专业版 <i class='text-danger icon-pro-version'></i></a> &nbsp;           </div>
+  </div>
+</footer>
+<div id="noticeBox"></div>
+<script>
+/* Alert got messages. */
+needPing = false;
+$(function()
+{
+    var windowBlur = false;
+    if(window.Notification)
+    {
+        window.onblur  = function(){windowBlur = true;}
+        window.onfocus = function(){windowBlur = false;}
+    }
+    setInterval(function()
+    {
+        $.get(createLink('message', 'ajaxGetMessage', "windowBlur=" + (windowBlur ? '1' : '0')), function(data)
+        {
+            if(!windowBlur)
+            {
+                $('#noticeBox').append(data);
+                adjustNoticePosition();
+            }
+            else
+            {
+                if(data)
+                {
+                    if(typeof data == 'string') data = $.parseJSON(data);
+                    if(typeof data.message == 'string') notifyMessage(data);
+                }
+            }
+        });
+    }, 300000);
+})
+
+</script>
+
+<script>$(function() 
+{
+    var scp  = $('[data-id="changePassword"] a');
+    var sign = config.requestType == 'GET' ? '&' : '?';
+    scp.attr('href', scp.attr('href') + sign + 'onlybody=yes').modalTrigger({width:500, type:'iframe'});
+});
+
+</script>
+</body>
+</html>

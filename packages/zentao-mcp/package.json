@@ -1,0 +1,31 @@
+{
+  "name": "zentao-mcp",
+  "version": "1.0.0",
+  "description": "禅道 12.5.3 专业版只读 MCP server：任务/bug 拉取、截图识别、墨刀原型渲染",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=18.14"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wupenghello/zentao-mcp.git"
+  },
+  "type": "module",
+  "bin": {
+    "zentao-mcp": "./index.js",
+    "zentao-mcp-setup": "./scripts/setup.js"
+  },
+  "scripts": {
+    "probe": "node scripts/probe.js",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "playwright-core": "^1.62.1",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.11"
+  }
+}

@@ -1,0 +1,4 @@
+node_modules/
+# 本地敏感文件，永不入库
+accounts.json
+*.log

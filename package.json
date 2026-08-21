@@ -1,0 +1,25 @@
+{
+  "name": "claude-toolkit",
+  "version": "1.0.0",
+  "description": "wbscf-web 自制组件统一管理：Monorepo + 注册表 + 一键安装器（skill/MCP，自动解析依赖）",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18.14"
+  },
+  "bin": {
+    "toolkit": "./scripts/install.js"
+  },
+  "workspaces": [
+    "packages/zentao-mcp",
+    "packages/sys-login-mcp"
+  ],
+  "scripts": {
+    "list": "node scripts/install.js list",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.11"
+  }
+}

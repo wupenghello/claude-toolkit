@@ -1,0 +1,7 @@
+node_modules/
+*.log
+
+# 敏感本地文件，永不入库
+packages/sys-login-mcp/accounts.json
+packages/zentao-mcp/config.json
+packages/zentao-mcp/tmp/

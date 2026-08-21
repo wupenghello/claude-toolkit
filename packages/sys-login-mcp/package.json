@@ -1,0 +1,32 @@
+{
+  "name": "sys-login-mcp",
+  "version": "1.0.0",
+  "description": "wbscf-web dev 环境自动登录 MCP server：CNN 验证码识别 + UAA API 登录 + 浏览器注入片段生成",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18.14"
+  },
+  "bin": {
+    "sys-login-mcp": "./index.js",
+    "sys-login-setup": "./scripts/setup.js",
+    "sys-login-probe": "./scripts/probe.js"
+  },
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "probe": "node scripts/probe.js",
+    "test": "vitest run",
+    "extract-weights": "node tools/extract-weights.mjs",
+    "verify-cnn": "node test/verify-cnn.mjs",
+    "verify-crypto": "node test/verify-crypto.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "pngjs": "^7.0.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.11"
+  }
+}

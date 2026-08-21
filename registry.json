@@ -1,0 +1,40 @@
+{
+  "components": [
+    {
+      "name": "zentao",
+      "description": "禅道 MCP + 配套 skill（拉任务/bug、图片识别、墨刀原型）",
+      "provides": {
+        "mcpServers": {
+          "zentao": {
+            "command": "node",
+            "args": ["packages/zentao-mcp/index.js"]
+          }
+        },
+        "skills": [{ "name": "zentao", "from": "packages/zentao-mcp/skill/zentao" }]
+      },
+      "dependsOn": []
+    },
+    {
+      "name": "sys-login",
+      "description": "dev 环境自动登录 MCP + skill（CNN 验证码识别 + 浏览器注入）",
+      "provides": {
+        "mcpServers": {
+          "sys-login": {
+            "command": "node",
+            "args": ["packages/sys-login-mcp/index.js"]
+          }
+        },
+        "skills": [{ "name": "sys-login", "from": "packages/sys-login-mcp/skill/sys-login" }]
+      },
+      "dependsOn": []
+    },
+    {
+      "name": "mcp-scaffold",
+      "description": "工程化 MCP server 脚手架 skill（模板 + 六要素 + 验收清单）",
+      "provides": {
+        "skills": [{ "name": "mcp-scaffold", "from": "packages/skills/mcp-scaffold" }]
+      },
+      "dependsOn": []
+    }
+  ]
+}

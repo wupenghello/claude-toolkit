@@ -1,0 +1,10 @@
+{
+  "baseUrl": "http://pm.esteel.tech/zentao",
+  "account": "你的禅道账号",
+  "password": "你的禅道密码",
+  "tmpDir": "",
+  "modao": {
+    "account": "可选：墨刀账号（私有原型才需要，共享链接匿名可看）",
+    "password": "可选：墨刀密码"
+  }
+}
