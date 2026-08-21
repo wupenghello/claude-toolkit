@@ -96,6 +96,7 @@ registry 条目完整示例（MCP + skill 组件）：
 | `zentao` | MCP + skill | 禅道任务/bug 拉取、图片识别、墨刀原型 |
 | `sys-login` | MCP + skill | dev 环境自动登录（CNN 验证码识别 + 浏览器注入） |
 | `mcp-scaffold` | skill | 工程化 MCP 脚手架（做新 MCP 时的标准流程） |
+| `git` | skill | Git 提交规范（Conventional Commits + commitlint + wbscf-web 分支模型） |
 | `claude-toolkit` | skill | 本指南（组件管理接入指南） |
 
 ## 7. 安装后怎么确认成功

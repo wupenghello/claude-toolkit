@@ -21,6 +21,7 @@ AI 拿到后会自己完成「下载 → 装依赖 → 装工具 → 验证」�
 | 自动登录（sys-login） | 验证页面时自动登录系统，不用手输账号和验证码 |
 | 禅道（zentao） | 拉取禅道的任务、bug，还能识别截图 |
 | 脚手架（mcp-scaffold） | 以后做新工具时的标准模板 |
+| Git 规范（git） | 提交信息、分支怎么建，按团队规范来 |
 
 这些工具装好之后**自动就生效了**——你对 AI 说「登录 erp」「看看 bug-7551」，AI 自己就会用对应工具，你平时根本不用碰这个仓库。
 
@@ -73,7 +74,8 @@ scripts/install.js  那条 toolkit 命令的本体
 packages/           工具的代码都在这
 ├─ zentao-mcp/        禅道工具
 ├─ sys-login-mcp/     自动登录工具
-└─ skills/mcp-scaffold/  做新工具的模板
+├─ skills/mcp-scaffold/  做新工具的模板
+└─ skills/git/          Git 提交规范
 ```
 
 ## 不想看技术细节的话

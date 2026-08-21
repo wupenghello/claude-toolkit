@@ -37,6 +37,14 @@
       "dependsOn": []
     },
     {
+      "name": "git",
+      "description": "Git 工作流 skill（Conventional Commits + commitlint 规则 + wbscf-web 分支模型）",
+      "provides": {
+        "skills": [{ "name": "git", "from": "packages/skills/git" }]
+      },
+      "dependsOn": []
+    },
+    {
       "name": "claude-toolkit",
       "description": "组件统一管理 skill（给 AI 的接入指南：装/卸/加组件、依赖关系）",
       "provides": {

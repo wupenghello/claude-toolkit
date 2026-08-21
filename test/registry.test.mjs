@@ -42,13 +42,15 @@ describe('真实 registry.json', () => {
     const errors = validateRegistry(ROOT, registry.components)
     expect(errors).toEqual([])
   })
-  it('三个组件名唯一', () => {
+  it('组件名唯一且包含全部组件', () => {
     const registry = loadRegistry(ROOT)
     const names = registry.components.map((c) => c.name)
     expect(new Set(names).size).toBe(names.length)
     expect(names).toContain('zentao')
     expect(names).toContain('sys-login')
     expect(names).toContain('mcp-scaffold')
+    expect(names).toContain('git')
+    expect(names).toContain('claude-toolkit')
   })
 })
 

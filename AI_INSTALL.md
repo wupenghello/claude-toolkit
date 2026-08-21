@@ -69,7 +69,7 @@ toolkit install --all --project=<目标项目绝对路径>
 toolkit list
 ```
 
-应显示 4 个组件都「已装」：zentao、sys-login、mcp-scaffold、claude-toolkit。
+应显示 5 个组件都「已装」：zentao、sys-login、mcp-scaffold、git、claude-toolkit。
 
 ## 7. 重启 Claude Code 会话
 
@@ -83,6 +83,7 @@ toolkit list
 - 「登录 erp / 验证页面」→ 触发 sys-login 自动登录
 - 「看看 bug-7551 / 拉禅道任务」→ 触发 zentao
 - 「做个新 MCP」→ 触发 mcp-scaffold
+- 「提交 / commit」→ 触发 git（按团队规范提交）
 - 「装/卸/加组件」→ 触发 claude-toolkit skill（组件管理）
 
 ## 故障排查
