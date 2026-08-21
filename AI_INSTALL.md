@@ -45,6 +45,7 @@ toolkit list   # 能跑通即成功
 |---|---|---|
 | `packages/sys-login-mcp/accounts.json` | 登录测试账号密码 | 无，格式见下文 |
 | `packages/zentao-mcp/config.json` | 禅道/墨刀账号密码 | `packages/zentao-mcp/config.example.json` |
+| `packages/apifox-mcp/config.json` | Apifox API 访问令牌 | `packages/apifox-mcp/config.example.json` |
 
 `accounts.json` 格式：
 
@@ -69,7 +70,7 @@ toolkit install --all --project=<目标项目绝对路径>
 toolkit list
 ```
 
-应显示 5 个组件都「已装」：zentao、sys-login、mcp-scaffold、git、claude-toolkit。
+应显示 6 个组件都「已装」：zentao、sys-login、apifox、mcp-scaffold、git、claude-toolkit。
 
 ## 7. 重启 Claude Code 会话
 
@@ -84,6 +85,7 @@ toolkit list
 - 「看看 bug-7551 / 拉禅道任务」→ 触发 zentao
 - 「做个新 MCP」→ 触发 mcp-scaffold
 - 「提交 / commit」→ 触发 git（按团队规范提交）
+- 「查某接口参数 / 返回值」→ 触发 apifox（接口文档）
 - 「装/卸/加组件」→ 触发 claude-toolkit skill（组件管理）
 
 ## 故障排查

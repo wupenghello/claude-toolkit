@@ -20,6 +20,7 @@ AI 拿到后会自己完成「下载 → 装依赖 → 装工具 → 验证」�
 |---|---|
 | 自动登录（sys-login） | 验证页面时自动登录系统，不用手输账号和验证码 |
 | 禅道（zentao） | 拉取禅道的任务、bug，还能识别截图 |
+| Apifox 接口文档（apifox） | 查后端接口的参数、返回值，不用翻网页 |
 | 脚手架（mcp-scaffold） | 以后做新工具时的标准模板 |
 | Git 规范（git） | 提交信息、分支怎么建，按团队规范来 |
 
@@ -74,6 +75,7 @@ scripts/install.js  那条 toolkit 命令的本体
 packages/           工具的代码都在这
 ├─ zentao-mcp/        禅道工具
 ├─ sys-login-mcp/     自动登录工具
+├─ apifox-mcp/         接口文档工具
 ├─ skills/mcp-scaffold/  做新工具的模板
 └─ skills/git/          Git 提交规范
 ```

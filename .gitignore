@@ -5,3 +5,4 @@ node_modules/
 packages/sys-login-mcp/accounts.json
 packages/zentao-mcp/config.json
 packages/zentao-mcp/tmp/
+packages/apifox-mcp/config.json

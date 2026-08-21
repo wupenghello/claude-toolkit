@@ -1,0 +1,21 @@
+{
+  "name": "apifox-mcp",
+  "version": "1.0.0",
+  "description": "Apifox 接口文档 MCP wrapper：读本地 config.json 的 token，spawn apifox-mcp-server 并透传 stdio",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18.14"
+  },
+  "bin": {
+    "apifox-mcp": "./index.js",
+    "apifox-setup": "./scripts/setup.js",
+    "apifox-probe": "./scripts/probe.js"
+  },
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "probe": "node scripts/probe.js"
+  },
+  "dependencies": {}
+}

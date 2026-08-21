@@ -29,6 +29,25 @@
       "dependsOn": []
     },
     {
+      "name": "apifox",
+      "description": "Apifox 接口文档 MCP（ERP + 物泊智链两个 project）+ 配套 skill（读 OAS / $ref / 刷新缓存）",
+      "provides": {
+        "mcpServers": {
+          "apifox-erp": {
+            "command": "node",
+            "args": ["packages/apifox-mcp/index.js", "--project", "erp"]
+          },
+          "apifox-wbzl": {
+            "command": "node",
+            "args": ["packages/apifox-mcp/index.js", "--project", "wbzl"]
+          }
+        },
+        "skills": [{ "name": "apifox", "from": "packages/apifox-mcp/skill/apifox" }]
+      },
+      "dependsOn": [],
+      "removeMcpServers": ["API 文档", "物泊智链接口聚合 - API 文档"]
+    },
+    {
       "name": "mcp-scaffold",
       "description": "工程化 MCP server 脚手架 skill（模板 + 六要素 + 验收清单）",
       "provides": {

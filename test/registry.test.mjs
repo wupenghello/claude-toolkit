@@ -50,6 +50,7 @@ describe('真实 registry.json', () => {
     expect(names).toContain('sys-login')
     expect(names).toContain('mcp-scaffold')
     expect(names).toContain('git')
+    expect(names).toContain('apifox')
     expect(names).toContain('claude-toolkit')
   })
 })
@@ -165,5 +166,34 @@ describe('安装 / 卸载 / 反向依赖', () => {
     const root = tmpRootWithSkill('user')
     installComponent(root, project, comps[1])
     expect(reverseDependents(project, 'base', comps)).toEqual(['user'])
+  })
+  it('installComponent 清理 removeMcpServers 指定的旧条目，保留第三方', () => {
+    const root = tmpRootWithSkill('x')
+    const project = tmpProject()
+    fs.writeFileSync(
+      path.join(project, '.mcp.json'),
+      JSON.stringify(
+        {
+          mcpServers: {
+            'API 文档': { command: 'npx.cmd', args: ['-y', 'old'] },
+            '物泊智链接口聚合 - API 文档': { command: 'npx.cmd', args: ['-y', 'old'] },
+            第三方: { command: 'npx.cmd', args: ['-y', 'keep'] },
+          },
+        },
+        null,
+        2,
+      ),
+    )
+    const compWithRemove = {
+      name: 'x',
+      provides: { skills: [{ name: 'x', from: 'packages/skills/x' }] },
+      dependsOn: [],
+      removeMcpServers: ['API 文档', '物泊智链接口聚合 - API 文档'],
+    }
+    installComponent(root, project, compWithRemove)
+    const mcp = JSON.parse(fs.readFileSync(path.join(project, '.mcp.json'), 'utf8'))
+    expect(mcp.mcpServers['API 文档']).toBeUndefined()
+    expect(mcp.mcpServers['物泊智链接口聚合 - API 文档']).toBeUndefined()
+    expect(mcp.mcpServers['第三方']).toBeTruthy()
   })
 })

@@ -86,8 +86,11 @@ registry 条目完整示例（MCP + skill 组件）：
 
 - `packages/sys-login-mcp/accounts.json` —— 登录测试账号密码
 - `packages/zentao-mcp/config.json` —— 禅道/墨刀账号密码
+- `packages/apifox-mcp/config.json` —— Apifox API 访问令牌（账号级，一个 token 访问其下所有项目）
 
-别人 clone 后这些文件缺失，需自行填写（zentao 有 `config.example.json` 模板）。
+别人 clone 后这些文件缺失，需自行填写（zentao / apifox 有 `config.example.json` 模板）。
+
+**AI 安装 apifox 时的动作**：跑 `packages/apifox-mcp/scripts/setup.js` 会自动尝试从项目旧 `.mcp.json` 迁移 token；若仍缺，向用户索要「Apifox 头像 → 个人设置 → API 访问令牌」，用户给了才写入 config.json，用户没给就停下让用户手动填——**绝不编造 token**。
 
 ## 6. 当前组件清单
 
@@ -95,6 +98,7 @@ registry 条目完整示例（MCP + skill 组件）：
 |---|---|---|
 | `zentao` | MCP + skill | 禅道任务/bug 拉取、图片识别、墨刀原型 |
 | `sys-login` | MCP + skill | dev 环境自动登录（CNN 验证码识别 + 浏览器注入） |
+| `apifox` | MCP + skill | Apifox 接口文档（ERP + 物泊智链，读 OAS / $ref / 刷新） |
 | `mcp-scaffold` | skill | 工程化 MCP 脚手架（做新 MCP 时的标准流程） |
 | `git` | skill | Git 提交规范（Conventional Commits + commitlint + wbscf-web 分支模型） |
 | `claude-toolkit` | skill | 本指南（组件管理接入指南） |
