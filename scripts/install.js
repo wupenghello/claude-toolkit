@@ -10,6 +10,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { isCancel, multiselect } from '@clack/prompts'
 import {
   loadRegistry,
   validateRegistry,
@@ -68,7 +69,7 @@ function cmdList() {
 }
 
 // ---------- install ----------
-function cmdInstall() {
+async function cmdInstall() {
   checkProject()
   // 结构校验：安装前先保证注册表无环、无悬空引用
   const errors = validateRegistry(ROOT, components)
@@ -89,16 +90,26 @@ function cmdInstall() {
         process.exit(1)
       }
     }
-  } else {
-    // 无参数：列出组件 + 用法引导（不做 readline 交互，Windows 终端兼容性差）
-    console.log('可用组件：')
-    components.forEach((c, i) => {
-      console.log(`  ${i + 1}. ${describe(c)}  [${isInstalled(c) ? '已装' : '未装'}]`)
-    })
-    console.log('\n请用命令行指定要安装的组件：')
-    console.log('  toolkit install --all              安装全部')
-    console.log('  toolkit install <名字> [名字...]    安装指定（如 toolkit install zentao sys-login）')
+  } else if (!process.stdin.isTTY) {
+    // 非 TTY（管道/CI/Claude Code 里让 AI 跑）：列出组件 + 引导命令行，不尝试交互
+    listAndGuide()
     return
+  } else {
+    // TTY 终端：交互式多选（空格选/回车确认，@clack/prompts 跨平台处理 PowerShell/cmd/Git Bash）
+    const selected = await multiselect({
+      message: '选择要安装的组件（空格选中，回车确认）',
+      options: components.map((c) => ({
+        value: c.name,
+        label: c.name,
+        hint: isInstalled(c) ? '已装' : describe(c),
+      })),
+      required: false,
+    })
+    if (isCancel(selected)) {
+      console.log('已取消，未安装任何组件。')
+      return
+    }
+    target = selected
   }
 
   // 依赖展开 + 拓扑排序
@@ -118,6 +129,16 @@ function cmdInstall() {
   }
   console.log(`\n完成。MCP 已写入 ${path.join(PROJECT, '.mcp.json')}，skill 已部署到 ${path.join(PROJECT, '.claude', 'skills')}。`)
   console.log('提示：MCP 工具需重启 Claude Code 会话生效；skill 由会话动态发现。')
+}
+
+function listAndGuide() {
+  console.log('可用组件：')
+  components.forEach((c, i) => {
+    console.log(`  ${i + 1}. ${describe(c)}  [${isInstalled(c) ? '已装' : '未装'}]`)
+  })
+  console.log('\n请用命令行指定要安装的组件：')
+  console.log('  toolkit install --all              安装全部')
+  console.log('  toolkit install <名字> [名字...]    安装指定（如 toolkit install zentao sys-login）')
 }
 
 // ---------- uninstall ----------
@@ -144,7 +165,7 @@ function cmdUninstall() {
 
 // ---------- 分发 ----------
 if (cmd === 'list') cmdList()
-else if (cmd === 'install' || cmd === 'update') cmdInstall() // update 即 install 的覆盖式更新别名
+else if (cmd === 'install' || cmd === 'update') await cmdInstall() // update 即 install 的覆盖式更新别名
 else if (cmd === 'uninstall') cmdUninstall()
 else {
   console.error(`[toolkit] 未知命令: ${cmd}（支持 list / install / update / uninstall）`)
