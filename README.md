@@ -2,6 +2,16 @@
 
 给你的 AI 配的一套工具箱：**一个仓库装下所有自制的小工具，一条命令就能装、卸、加新的**。
 
+## 🚀 给 AI 用（最重要）
+
+想让 AI 自动装好这套工具，把下面这行丢给 AI 就行：
+
+```bash
+curl -s https://raw.githubusercontent.com/wupenghello/claude-toolkit/master/AI_INSTALL.md
+```
+
+AI 拿到后会自己完成「下载 → 装依赖 → 装工具 → 验证」全流程，**不用你手敲任何命令**。
+
 ## 它是什么
 
 这里装着几个让 AI 更好用的小工具：
