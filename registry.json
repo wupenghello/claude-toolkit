@@ -35,6 +35,14 @@
         "skills": [{ "name": "mcp-scaffold", "from": "packages/skills/mcp-scaffold" }]
       },
       "dependsOn": []
+    },
+    {
+      "name": "claude-toolkit",
+      "description": "组件统一管理 skill（给 AI 的接入指南：装/卸/加组件、依赖关系）",
+      "provides": {
+        "skills": [{ "name": "claude-toolkit", "from": "skill/claude-toolkit" }]
+      },
+      "dependsOn": []
     }
   ]
 }
