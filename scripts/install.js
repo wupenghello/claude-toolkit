@@ -9,7 +9,6 @@
 //   通用: --project=<路径> 指定目标项目（默认 D:/projects/wbscf-web）
 import fs from 'node:fs'
 import path from 'node:path'
-import readline from 'node:readline/promises'
 import { fileURLToPath } from 'node:url'
 import {
   loadRegistry,
@@ -91,15 +90,15 @@ function cmdInstall() {
       }
     }
   } else {
-    if (!process.stdin.isTTY) {
-      console.error('[toolkit] 非交互环境：请用 install --all 或 install <组件名> 指定要装的组件')
-      process.exit(1)
-    }
-    target = promptSelect()
-    if (!target.length) {
-      console.log('未选择任何组件，退出。')
-      return
-    }
+    // 无参数：列出组件 + 用法引导（不做 readline 交互，Windows 终端兼容性差）
+    console.log('可用组件：')
+    components.forEach((c, i) => {
+      console.log(`  ${i + 1}. ${describe(c)}  [${isInstalled(c) ? '已装' : '未装'}]`)
+    })
+    console.log('\n请用命令行指定要安装的组件：')
+    console.log('  toolkit install --all              安装全部')
+    console.log('  toolkit install <名字> [名字...]    安装指定（如 toolkit install zentao sys-login）')
+    return
   }
 
   // 依赖展开 + 拓扑排序
@@ -119,28 +118,6 @@ function cmdInstall() {
   }
   console.log(`\n完成。MCP 已写入 ${path.join(PROJECT, '.mcp.json')}，skill 已部署到 ${path.join(PROJECT, '.claude', 'skills')}。`)
   console.log('提示：MCP 工具需重启 Claude Code 会话生效；skill 由会话动态发现。')
-}
-
-function promptSelect() {
-  return new Promise((resolve) => {
-    const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
-    components.forEach((c, i) => {
-      console.log(`  ${i + 1}. ${describe(c)}  [${isInstalled(c) ? '已装' : '未装'}]`)
-    })
-    rl.question('\n回车=安装全部，或输入编号（如 1,3 装指定），q 退出：', (ans) => {
-      rl.close()
-      ans = ans.trim()
-      if (ans.toLowerCase() === 'q') return resolve([]) // 显式取消
-      // 回车（空）或 all → 安装全部
-      if (ans.toLowerCase() === 'all' || !ans) return resolve(components.map((c) => c.name))
-      const picks = []
-      for (const tok of ans.split(/[,，\s]+/)) {
-        const idx = Number(tok)
-        if (idx >= 1 && idx <= components.length) picks.push(components[idx - 1].name)
-      }
-      resolve([...new Set(picks)])
-    })
-  })
 }
 
 // ---------- uninstall ----------
