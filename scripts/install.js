@@ -127,11 +127,12 @@ function promptSelect() {
     components.forEach((c, i) => {
       console.log(`  ${i + 1}. ${describe(c)}  [${isInstalled(c) ? '已装' : '未装'}]`)
     })
-    rl.question('\n输入要装的编号（逗号分隔，如 1,3），或 all 全装，回车=取消：', (ans) => {
+    rl.question('\n回车=安装全部，或输入编号（如 1,3 装指定），q 退出：', (ans) => {
       rl.close()
       ans = ans.trim()
-      if (ans.toLowerCase() === 'all') return resolve(components.map((c) => c.name))
-      if (!ans) return resolve([])
+      if (ans.toLowerCase() === 'q') return resolve([]) // 显式取消
+      // 回车（空）或 all → 安装全部
+      if (ans.toLowerCase() === 'all' || !ans) return resolve(components.map((c) => c.name))
       const picks = []
       for (const tok of ans.split(/[,，\s]+/)) {
         const idx = Number(tok)

@@ -14,7 +14,7 @@ wbscf-web 自制组件的统一管理：**一个 Monorepo 装下所有 skill 和
 
 ```bash
 toolkit list                       # 看所有组件 + 已装/未装
-toolkit install                    # 交互式：输入编号（如 1,3）或 all 选择安装
+toolkit install                    # 交互式：回车=安装全部，输入编号（如 1,3）装指定，q 退出
 toolkit install zentao             # 装指定组件（自动补依赖）
 toolkit install --all              # 一键全装
 toolkit update sys-login           # 覆盖式更新
