@@ -19,7 +19,6 @@ git --version  # 需可用
 git clone https://github.com/wupenghello/claude-toolkit.git D:/tools/claude-toolkit
 ```
 
-- 仓库是私有的，用户需先有 GitHub 访问权限（没有会 clone 失败，提示用户授权）
 - clone 位置可换，但记住绝对路径，后续 `--project` 等参数要用
 
 ## 2. 安装依赖
@@ -89,6 +88,6 @@ toolkit list
 ## 故障排查
 
 - `toolkit list` 报「项目目录不存在」→ `--project` 路径错了，改成实际项目绝对路径
-- clone 报 403/404 → 用户没有仓库访问权限，让其到 GitHub 授权
+- clone 失败 → 检查网络、确认能访问 github.com（仓库已公开，无需授权）
 - `npm install` 失败 → 网络/Node 版本问题，确认 Node ≥ 18.14
 - 装完 MCP 工具仍不可见 → 确认已重启 Claude Code 会话
