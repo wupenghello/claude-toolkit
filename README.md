@@ -1,81 +1,75 @@
 # claude-toolkit
 
-wbscf-web 自制组件的统一管理：**一个 Monorepo 装下所有 skill 和 MCP，一份注册表声明依赖关系，一条命令选择性安装**。
+给你的 AI 配的一套工具箱：**一个仓库装下所有自制的小工具，一条命令就能装、卸、加新的**。
 
-不再为每个新组件单独建仓库——新组件放进 `packages/` 目录、在 `registry.json` 登记一条即可，依赖关系（如"装某 skill 自动带上某 MCP"）靠 `dependsOn` 声明。
+## 它是什么
 
-## 怎么用
+这里装着几个让 AI 更好用的小工具：
 
-**大多数时候你不需要碰它**——组件装好后已自动生效。你在 Claude 里说"登录 erp"、"看看 bug-7551"，AI 会直接调用 sys-login、zentao 这些 MCP 工具。
+| 工具 | 能干嘛 |
+|---|---|
+| 自动登录（sys-login） | 验证页面时自动登录系统，不用手输账号和验证码 |
+| 禅道（zentao） | 拉取禅道的任务、bug，还能识别截图 |
+| 脚手架（mcp-scaffold） | 以后做新工具时的标准模板 |
 
-只有两种情况需要手动敲命令：**加了新组件要部署**、**换机器/重新装**。
+这些工具装好之后**自动就生效了**——你对 AI 说「登录 erp」「看看 bug-7551」，AI 自己就会用对应工具，你平时根本不用碰这个仓库。
 
-### 常用命令（`toolkit` 已全局安装，任何目录直接敲）
+## 什么时候需要手动操作
+
+只有两种情况：
+
+1. **加了新工具**，要装到项目里
+2. **换电脑 / 重新装**
+
+其余时间放着不用管。
+
+## 常用命令
 
 ```bash
-toolkit list                       # 看所有组件 + 已装/未装
-toolkit install                    # 交互式多选（空格选中、回车确认；非终端环境会自动降级为列表+引导）
-toolkit install zentao             # 装指定组件（自动补依赖）
-toolkit install --all              # 一键全装
-toolkit update sys-login           # 覆盖式更新
-toolkit uninstall mcp-scaffold     # 卸载（被别的组件依赖时会拦截）
+toolkit list                     # 看现在装了哪些工具
+toolkit install --all            # 把所有工具都装上
+toolkit install zentao           # 只装某一个（比如禅道）
+toolkit uninstall mcp-scaffold   # 卸掉某个工具
+toolkit update zentao            # 更新某个工具到最新
 ```
 
-装到哪：默认 `D:\projects\wbscf-web`（MCP 写进 `.mcp.json` 的 `mcpServers`、skill 放进 `.claude/skills/`）。装到别的项目加 `--project=<路径>`（macOS/Linux 必传）。
+命令装到哪个项目？默认是 `D:\projects\wbscf-web`。要装到别的项目，在命令后加 `--project=<项目路径>`。
 
-> 注意：`toolkit` 是 `npm link` 装的全局命令，指向 `D:/tools/claude-toolkit` 里的脚本。改源码即生效，无需重装。
-
-### 换机器 / 给别人用
+## 换电脑 / 给别人用
 
 ```bash
 git clone https://github.com/wupenghello/claude-toolkit.git D:/tools/claude-toolkit
 cd D:/tools/claude-toolkit
-npm install                          # workspaces 一次装所有子包依赖
-npm link                             # 让 toolkit 成为全局命令
-toolkit install --all                # 部署到项目
+npm install        # 自动装好所有依赖
+npm link           # 让 toolkit 命令在任何目录都能用
+toolkit install --all
 ```
 
-换机器后要补敏感文件（gitignore 不入库）：`packages/sys-login-mcp/accounts.json`（登录账号）、`packages/zentao-mcp/config.json`（禅道/墨刀密码，有 `config.example.json` 模板可复制）。
+> 换电脑后有几样账号密码要**重新填**（登录系统的账号、禅道的密码）。这些文件为了安全不会上传到网上，所以新电脑上是空的，需要手动补上。禅道那个有 `config.example.json` 样例文件，照着改即可。
 
-## 加一个新组件（三步）
+## 加一个新工具（三步）
 
-1. **放源码**：MCP 组件放 `packages/<名字>-mcp/`（含 `index.js` + `skill/<名字>/SKILL.md`）；纯 skill 放 `packages/skills/<名字>/`
-2. **登记**：在 `registry.json` 加一条，声明 `provides`（MCP 的 command/args 用相对仓库根的路径）和 `dependsOn`
-3. **校验 + 部署**：`npm test` 过结构校验，然后 `toolkit install <名字>`
+1. 把新工具的代码放到 `packages/` 目录里
+2. 在 `registry.json`（工具清单）里登记一行，写清楚：这个工具**提供什么**、**依赖谁**
+3. 跑 `npm test` 检查无误，再 `toolkit install <名字>` 装进项目
 
-### 依赖声明示例
+**依赖关系**是自动处理的：比如「拉禅道任务」这个工具依赖「禅道」工具，清单里写上一句依赖，装它的时候会自动把禅道也一起装上，不用你手动一个个装。
 
-```json
-{
-  "name": "zentao-task-exec",
-  "provides": { "skills": [{ "name": "zentao-task-exec", "from": "packages/skills/zentao-task-exec" }] },
-  "dependsOn": ["zentao"]
-}
-```
-
-`toolkit install zentao-task-exec` 会自动先把 `zentao` MCP 装上。
-
-## 目录
+## 目录是干嘛的
 
 ```
-registry.json         组件清单：name / description / provides(mcpServers+skills) / dependsOn
-scripts/install.js    统一安装器 CLI（list / install / update / uninstall）
-lib/registry-core.js  核心逻辑（依赖拓扑排序、MCP 合并、skill 部署、状态检测、损坏备份）
-test/registry.test.mjs  vitest 测试
-packages/
-├─ zentao-mcp/        禅道 MCP + skill
-├─ sys-login-mcp/     自动登录 MCP + skill
-└─ skills/
-   └─ mcp-scaffold/   工程化 MCP 脚手架 skill
+registry.json     工具清单：每个工具叫什么、提供什么、依赖谁
+scripts/install.js  那条 toolkit 命令的本体
+packages/           工具的代码都在这
+├─ zentao-mcp/        禅道工具
+├─ sys-login-mcp/     自动登录工具
+└─ skills/mcp-scaffold/  做新工具的模板
 ```
 
-## 敏感文件（gitignore，不入库）
+## 不想看技术细节的话
 
-- `packages/sys-login-mcp/accounts.json` — 登录测试账号
-- `packages/zentao-mcp/config.json` — 禅道/墨刀账号密码（模板 `config.example.json` 入库）
+记住这三点就够了：
 
-## 测试
-
-```bash
-npm test    # vitest：注册表结构校验 + 依赖拓扑 + MCP 合并保留第三方 + 损坏备份 + 安装/卸载
-```
+1. **平时不用管**——工具装好自动生效，AI 会用
+2. **要装/卸/看**——用 `toolkit` 开头的几条命令
+3. **加新工具**——代码放 `packages/`，清单登记一行，`toolkit install` 装一下
