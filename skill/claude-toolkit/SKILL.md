@@ -28,6 +28,8 @@ toolkit list
 
 ## 2. 安装组件
 
+先 `toolkit list` 确认组件名（装错名字会报「未知组件」），再装：
+
 ```bash
 toolkit install --all                  # 全部安装
 toolkit install zentao sys-login       # 安装指定（多个，自动补依赖）
@@ -41,19 +43,34 @@ toolkit install                        # 交互式多选（仅真终端可用）
 ## 3. 卸载 / 更新
 
 ```bash
-toolkit uninstall mcp-scaffold         # 卸载（若被别的组件依赖会拦截）
+toolkit uninstall mcp-scaffold         # 卸载
 toolkit update zentao                  # 覆盖式更新（= install 别名）
 ```
 
-## 4. 加一个新组件（三步，做完就验收）
+卸载若报「已被 xx 依赖」，是反向依赖保护——**这是预期行为，不是出错**：先卸载依赖它的组件，或如实告诉用户"xx 依赖它，不能单独卸"。
 
-用户要做新 MCP/skill 时，按这个流程：
+## 4. 加一个新组件
+
+用户说「做新 MCP / 新 skill」时，**先触发 `mcp-scaffold` skill 生成标准工程**（index.js 模板、测试、安装器——它是"怎么做 MCP"的完整流程），做完再把产物放进 claude-toolkit：
 
 1. **放源码**：MCP 组件 → `packages/<名字>-mcp/`（含 `index.js` + `skill/<名字>/SKILL.md`）；纯 skill → `packages/skills/<名字>/`
-2. **登记**：在 `registry.json` 加一条，声明 `provides`（MCP 的 command/args 用相对仓库根的路径，如 `packages/xxx/index.js`）和 `dependsOn`
-3. **校验 + 部署**：`npm test` 过结构校验（会查路径存在、依赖无环、无悬空引用），再 `toolkit install <名字>`
+2. **登记**：在 `registry.json` 加一条（MCP 的 command/args 用相对仓库根的路径）
+3. **校验 + 部署**：`npm test` 过结构校验（查路径存在、依赖无环、无悬空引用），再 `toolkit install <名字>`
 
-依赖声明示例——「禅道任务执行 skill」依赖 zentao MCP：
+registry 条目完整示例（MCP + skill 组件）：
+
+```json
+{
+  "name": "xxx",
+  "provides": {
+    "mcpServers": { "xxx": { "command": "node", "args": ["packages/xxx-mcp/index.js"] } },
+    "skills": [{ "name": "xxx", "from": "packages/xxx-mcp/skill/xxx" }]
+  },
+  "dependsOn": []
+}
+```
+
+纯 skill 组件（如「禅道任务执行 skill」依赖 zentao MCP）：
 
 ```json
 {
@@ -79,8 +96,14 @@ toolkit update zentao                  # 覆盖式更新（= install 别名）
 | `zentao` | MCP + skill | 禅道任务/bug 拉取、图片识别、墨刀原型 |
 | `sys-login` | MCP + skill | dev 环境自动登录（CNN 验证码识别 + 浏览器注入） |
 | `mcp-scaffold` | skill | 工程化 MCP 脚手架（做新 MCP 时的标准流程） |
+| `claude-toolkit` | skill | 本指南（组件管理接入指南） |
 
-## 7. 故障排查
+## 7. 安装后怎么确认成功
+
+- **skill**：`ls <项目>/.claude/skills/<名字>/SKILL.md` 存在即已部署
+- **MCP**：`toolkit list` 显示「已装」即写入成功；但 MCP 工具要重启 Claude Code 会话后才出现在工具列表——重启前调用不到属正常，不是装失败了
+
+## 8. 故障排查
 
 - `toolkit list` 报「项目目录不存在」→ 目标项目路径不对，用 `--project=<实际路径>`
 - 安装后 MCP 工具不可见 → 重启 Claude Code 会话
