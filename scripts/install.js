@@ -10,6 +10,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { execSync } from 'node:child_process'
 import { isCancel, multiselect } from '@clack/prompts'
 import {
   loadRegistry,
@@ -33,10 +34,17 @@ const args = process.argv.slice(2).filter((a) => !a.startsWith('--'))
 const cmd = args[0] ?? 'install' // 默认命令：交互式安装
 const names = args.slice(1).filter((a) => !a.startsWith('--'))
 const all = process.argv.includes('--all')
+// update 未指定组件时默认更新全部；install 未指定仍走交互/引导
+const defaultAll = all || (cmd === 'update' && names.length === 0)
 
-const registry = loadRegistry(ROOT)
-const components = registry.components
-const map = byName(components)
+let components = []
+let map = {}
+function reloadRegistry() {
+  const registry = loadRegistry(ROOT)
+  components = registry.components
+  map = byName(components)
+}
+reloadRegistry()
 
 const isInstalled = (c) => componentInstalled(PROJECT, c)
 
@@ -45,6 +53,32 @@ function checkProject() {
     console.error(`[toolkit] 项目目录不存在: ${PROJECT}`)
     console.error('        请用 --project=<你的项目路径> 指定')
     process.exit(1)
+  }
+}
+
+// 更新仓库代码：从远端拉取（--ff-only 只快进，避免本地改动被合入）
+function gitPull() {
+  try {
+    const out = execSync('git pull --ff-only', { cwd: ROOT, encoding: 'utf8' })
+    if (out.trim()) console.log(out.trim())
+  } catch (e) {
+    const msg = (e.stderr || e.message || '').toString().trim()
+    console.error(`[toolkit] git pull 失败：${msg || '未知错误'}`)
+    console.error('        请确认仓库目录无未提交改动、能访问 github.com，然后重试。')
+    process.exit(1)
+  }
+}
+
+// 检查是否有新版本（best-effort）：fetch 后对比本地 HEAD 与上游；离线/无上游则静默跳过
+function checkForUpdates() {
+  try {
+    execSync('git fetch --quiet origin', { cwd: ROOT, stdio: 'ignore', timeout: 10000 })
+    const behind = execSync('git rev-list --count HEAD..@{u}', { cwd: ROOT, encoding: 'utf8' }).trim()
+    if (behind !== '0') {
+      console.log(`\n  ⚠ 有新版本：本地落后远端 ${behind} 个提交，跑 \`toolkit update\` 更新`)
+    }
+  } catch {
+    // 离线、无上游或无网络：静默跳过，不干扰 list 输出
   }
 }
 
@@ -66,6 +100,7 @@ function cmdList() {
     console.log(`  ${mark}  ${describe(c)}`)
   }
   if (!components.length) console.log('  （注册表为空）')
+  checkForUpdates()
 }
 
 // ---------- install ----------
@@ -80,7 +115,7 @@ async function cmdInstall() {
   }
 
   let target
-  if (all) {
+  if (defaultAll) {
     target = components.map((c) => c.name)
   } else if (names.length) {
     target = names
@@ -163,9 +198,19 @@ function cmdUninstall() {
   }
 }
 
+// ---------- update ----------
+async function cmdUpdate() {
+  checkProject()
+  console.log('[toolkit] 拉取最新代码…')
+  gitPull()
+  reloadRegistry() // 拉取后重读注册表，让新组件/新 skill 路径生效
+  await cmdInstall()
+}
+
 // ---------- 分发 ----------
 if (cmd === 'list') cmdList()
-else if (cmd === 'install' || cmd === 'update') await cmdInstall() // update 即 install 的覆盖式更新别名
+else if (cmd === 'install') await cmdInstall()
+else if (cmd === 'update') await cmdUpdate()
 else if (cmd === 'uninstall') cmdUninstall()
 else {
   console.error(`[toolkit] 未知命令: ${cmd}（支持 list / install / update / uninstall）`)

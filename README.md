@@ -34,16 +34,16 @@ AI 拿到后会自己完成「下载 → 装依赖 → 装工具 → 验证」�
 1. **加了新工具**，要装到项目里
 2. **换电脑 / 重新装**
 
-其余时间放着不用管。
+平时工具装好了自动生效。想更新到最新版时，跑一句 `toolkit update` 即可（`toolkit list` 会提示你本地是否落后了）。
 
 ## 常用命令
 
 ```bash
-toolkit list                     # 看现在装了哪些工具
+toolkit list                     # 看现在装了哪些工具（顺带提示是否有新版本）
 toolkit install --all            # 把所有工具都装上
 toolkit install zentao           # 只装某一个（比如禅道）
 toolkit uninstall mcp-scaffold   # 卸掉某个工具
-toolkit update zentao            # 更新某个工具到最新
+toolkit update                   # 更新：先 git pull 再覆盖式重装全部
 ```
 
 命令装到哪个项目？默认是 `D:\projects\wbscf-web`。要装到别的项目，在命令后加 `--project=<项目路径>`。

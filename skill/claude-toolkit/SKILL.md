@@ -44,10 +44,11 @@ toolkit install                        # 交互式多选（仅真终端可用）
 
 ```bash
 toolkit uninstall mcp-scaffold         # 卸载
-toolkit update zentao                  # 覆盖式更新（= install 别名）
+toolkit update                         # 更新全部：先 git pull 再覆盖式重装
+toolkit update zentao                  # 只更新某一个（同样会先 git pull）
 ```
 
-卸载若报「已被 xx 依赖」，是反向依赖保护——**这是预期行为，不是出错**：先卸载依赖它的组件，或如实告诉用户"xx 依赖它，不能单独卸"。
+`update` 会先 `git pull` 拉取远端代码再重装（`toolkit list` 也会顺带提示是否落后远端）；卸载若报「已被 xx 依赖」，是反向依赖保护——**这是预期行为，不是出错**：先卸载依赖它的组件，或如实告诉用户"xx 依赖它，不能单独卸"。
 
 ## 4. 加一个新组件
 

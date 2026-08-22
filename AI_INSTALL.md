@@ -89,6 +89,21 @@ toolkit list
 - 「查某接口参数 / 返回值」→ 触发 apifox（接口文档）
 - 「装/卸/加组件」→ 触发 claude-toolkit skill（组件管理）
 
+## 9. 更新（以后有新版本时）
+
+这套工具**不会自动更新**。用户想更新到最新时，重新把这行 curl 丢给 AI，AI 判断：
+
+- 若 `toolkit` 命令已可用（已装过）→ 直接跑 `toolkit update`，不要重新 clone
+- 若不可用 → 走上面第 1~8 步完整安装
+
+```bash
+toolkit update              # 更新全部（默认；内部先 git pull 再覆盖式重装）
+toolkit update zentao       # 只更新某一个（同样会先 git pull）
+toolkit list                # 顺带检查是否落后远端，落后会提示
+```
+
+> 若某次更新新增了 npm 依赖，先 `cd <仓库目录> && npm install` 再 `toolkit update`。
+
 ## 故障排查
 
 - `toolkit list` 报「项目目录不存在」→ `--project` 路径错了，改成实际项目绝对路径
