@@ -10,12 +10,16 @@ import fs from 'node:fs'
 import path from 'node:path'
 import readline from 'node:readline/promises'
 import { fileURLToPath } from 'node:url'
+// 在 toolkit 仓库内的包都能引到共享实现（相对路径 ../../.. 到仓库根）
+import { defaultProjectDir } from '../../../lib/platform.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, '..')
 
 const argProject = process.argv.find((a) => a.startsWith('--project='))
-const PROJECT = argProject ? argProject.slice('--project='.length) : 'D:/projects/<默认项目>'
+// 默认项目不要写死 D:/ 这类平台路径（macOS 上必炸），统一走共享解析：
+// WBSCF_ROOT 环境变量 → 仓库同级 wbscf-web → 平台默认
+const PROJECT = argProject ? argProject.slice('--project='.length) : defaultProjectDir(path.join(ROOT, '..', '..'))
 const log = (m) => console.log(`[setup] ${m}`)
 
 // —— 凭据文件是否仍是模板/无效 ——
@@ -49,7 +53,7 @@ async function prompt(file) {
 }
 
 async function main() {
-  // 0. 项目目录校验：不存在（如 macOS 用了 Windows 默认路径）必须报错退出，
+  // 0. 项目目录校验：不存在（默认探测落空）必须报错退出，
   //    否则会在错误位置注册 MCP / 创建垃圾目录
   if (!fs.existsSync(PROJECT)) {
     console.error(`[setup] 项目目录不存在: ${PROJECT}`)
@@ -81,6 +85,7 @@ main().catch((e) => { console.error('[setup] 失败:', e.message); process.exit(
 ## 容易漏的细节
 
 - **交互问题要给默认值**（回车即用），必填项为空则放弃写入（不能写半截配置）
+- **默认项目路径必须跨平台**：引 `lib/platform.js` 的 `defaultProjectDir`，不要写死 `D:/` 路径（macOS/Linux 上直接不可用）
 - `claude mcp add` 的 args 必须用 `path.join(ROOT, 'index.js')` 生成的**绝对路径**（克隆位置任意）
 - readline 用 `node:readline/promises`（Node 18+）
 - 结尾"下一步"清单中，未完成的事项（如凭据没填）必须放第 1 条并加醒目标记

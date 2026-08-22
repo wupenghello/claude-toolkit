@@ -7,9 +7,9 @@ description: wbscf-web 自制组件（MCP/skill）的统一管理。当需要安
 
 加载这份文档后，你就能管理 wbscf-web 的所有自制组件——安装、卸载、新增、查依赖，无需用户手把手教。
 
-- **仓库**：`D:\tools\claude-toolkit`
+- **仓库**：本工具所在目录（`toolkit` 命令已全局 link，任意目录可敲；仓库实际路径用 `pwd`/`which toolkit` 确认）
 - **命令**：`toolkit`（已全局安装，任何目录直接敲）
-- **目标项目**：`D:\projects\wbscf-web`（可用 `--project=<路径>` 覆盖）
+- **目标项目**：默认自动解析（`WBSCF_ROOT` 环境变量 → 仓库同级 `wbscf-web` → 平台默认，`toolkit list` 首行显示解析结果）；非默认时用 `--project=<路径>` 覆盖
 
 ## 0. 核心概念（先读，别猜）
 

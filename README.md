@@ -46,13 +46,14 @@ toolkit uninstall mcp-scaffold   # 卸掉某个工具
 toolkit update                   # 更新：先 git pull 再覆盖式重装全部
 ```
 
-命令装到哪个项目？默认是 `D:\projects\wbscf-web`。要装到别的项目，在命令后加 `--project=<项目路径>`。
+命令装到哪个项目？默认自动找：`WBSCF_ROOT` 环境变量 → 仓库同级的 `wbscf-web`（macOS/Linux 常见布局）→ 平台默认目录（`toolkit list` 首行会显示找到的项目）。要装到别的项目，在命令后加 `--project=<项目路径>`。
 
 ## 换电脑 / 给别人用
 
 ```bash
-git clone https://github.com/wupenghello/claude-toolkit.git D:/tools/claude-toolkit
-cd D:/tools/claude-toolkit
+git clone https://github.com/wupenghello/claude-toolkit.git ~/tools/claude-toolkit   # macOS/Linux
+# git clone https://github.com/wupenghello/claude-toolkit.git D:/tools/claude-toolkit  # Windows
+cd ~/tools/claude-toolkit
 npm install        # 自动装好所有依赖
 npm link           # 让 toolkit 命令在任何目录都能用
 toolkit install --all

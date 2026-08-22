@@ -16,6 +16,9 @@ git --version  # 需可用
 ## 1. 克隆仓库
 
 ```bash
+# macOS / Linux
+git clone https://github.com/wupenghello/claude-toolkit.git ~/tools/claude-toolkit
+# Windows（PowerShell）
 git clone https://github.com/wupenghello/claude-toolkit.git D:/tools/claude-toolkit
 ```
 
@@ -24,7 +27,7 @@ git clone https://github.com/wupenghello/claude-toolkit.git D:/tools/claude-tool
 ## 2. 安装依赖
 
 ```bash
-cd D:/tools/claude-toolkit
+cd <clone 的目录>
 npm install
 ```
 
@@ -61,7 +64,8 @@ toolkit list   # 能跑通即成功
 toolkit install --all --project=<目标项目绝对路径>
 ```
 
-- 默认项目是 `D:/projects/wbscf-web`，其他项目**必须显式传 `--project`**（macOS/Linux 必传）
+- 默认项目自动解析：`WBSCF_ROOT` 环境变量（目录须真实存在）→ 仓库同级的 `wbscf-web`（如 `~/wbscf/claude-toolkit` 与 `~/wbscf/wbscf-web` 并列）→ 平台默认（Windows `D:/projects/wbscf-web`，macOS/Linux `~/projects/wbscf-web`）。`toolkit list` 首行会显示实际解析到的项目和来源
+- 项目不在默认位置时，**显式传 `--project=<绝对路径>`**
 - `--all` 会装全部组件；只想装部分用 `toolkit install <组件名>`（如 `toolkit install zentao`）
 
 ## 6. 验证

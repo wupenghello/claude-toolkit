@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// 一键安装/更新 apifox-mcp 到指定项目（默认 D:/projects/wbscf-web）。幂等，可重复执行。
+// 一键安装/更新 apifox-mcp 到指定项目（默认按平台/同级目录自动解析）。幂等，可重复执行。
 // 五步：项目校验 → 凭据录入（config.json）→ 确保部署（toolkit install）→ 迁移清理旧条目 → 连通自检
 import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
@@ -7,13 +7,14 @@ import path from 'node:path'
 import readline from 'node:readline/promises'
 import { fileURLToPath } from 'node:url'
 import { isPlaceholderToken } from '../lib/config.js'
+import { defaultProjectDir } from '../../../lib/platform.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const PKG_ROOT = path.join(__dirname, '..')
 const TOOLKIT_ROOT = path.join(PKG_ROOT, '..', '..')
 
 const argProject = process.argv.find((a) => a.startsWith('--project='))
-const PROJECT = argProject ? argProject.slice('--project='.length) : 'D:/projects/wbscf-web'
+const PROJECT = argProject ? argProject.slice('--project='.length) : defaultProjectDir(TOOLKIT_ROOT)
 
 const log = (m) => console.log(`[setup] ${m}`)
 

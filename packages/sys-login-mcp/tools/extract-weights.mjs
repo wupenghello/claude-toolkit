@@ -1,14 +1,23 @@
 #!/usr/bin/env node
-// 一次性转换：D:\projects\captcha-ext\weights.js（window.__CAP_WEIGHTS = {...}）
-//           → 本项目 weights.json
+// 一次性转换：captcha-ext 的 weights.js（window.__CAP_WEIGHTS = {...}）→ 本项目 weights.json
 // 插件重训并重新导出 weights.js 后，重跑本脚本即可更新权重。
+// captcha-ext 位置默认 D:/projects/captcha-ext，其他机器用环境变量 CAPTCHA_EXT=<目录> 指定。
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const SRC = 'D:/projects/captcha-ext/weights.js'
+const SRC = process.env.CAPTCHA_EXT
+  ? path.join(process.env.CAPTCHA_EXT, 'weights.js')
+  : 'D:/projects/captcha-ext/weights.js'
 const DEST = path.join(__dirname, '..', 'weights.json')
+
+if (!fs.existsSync(SRC)) {
+  console.error(`找不到 captcha-ext 的 weights.js: ${SRC}`)
+  console.error('用环境变量 CAPTCHA_EXT=<captcha-ext 目录> 指定位置后重试，例如:')
+  console.error('  CAPTCHA_EXT=~/projects/captcha-ext npm run extract-weights')
+  process.exit(1)
+}
 
 const raw = fs.readFileSync(SRC, 'utf8')
 // 定位赋值号：从 "__CAP_WEIGHTS" 标识符之后找第一个 '='（不能全局找 '='，base64 padding 也含 '='）

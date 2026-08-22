@@ -6,7 +6,7 @@
 //   node scripts/install.js install zentao sys-login     命令行指定安装（自动补依赖）
 //   node scripts/install.js install --all                全装
 //   node scripts/install.js uninstall mcp-scaffold       卸载（反向依赖检查）
-//   通用: --project=<路径> 指定目标项目（默认 D:/projects/wbscf-web）
+//   通用: --project=<路径> 指定目标项目（默认按平台/同级目录自动解析）
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -23,12 +23,16 @@ import {
   uninstallComponent,
   reverseDependents,
 } from '../lib/registry-core.js'
+import { resolveDefaultProject } from '../lib/platform.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, '..')
 
 const argProject = process.argv.find((a) => a.startsWith('--project='))
-const PROJECT = argProject ? argProject.slice('--project='.length) : 'D:/projects/wbscf-web'
+const resolved = argProject
+  ? { dir: argProject.slice('--project='.length), source: '--project 参数' }
+  : resolveDefaultProject(ROOT)
+const PROJECT = resolved.dir
 
 const args = process.argv.slice(2).filter((a) => !a.startsWith('--'))
 const cmd = args[0] ?? 'install' // 默认命令：交互式安装
@@ -50,7 +54,7 @@ const isInstalled = (c) => componentInstalled(PROJECT, c)
 
 function checkProject() {
   if (!fs.existsSync(PROJECT)) {
-    console.error(`[toolkit] 项目目录不存在: ${PROJECT}`)
+    console.error(`[toolkit] 项目目录不存在: ${PROJECT}（来源: ${resolved.source}）`)
     console.error('        请用 --project=<你的项目路径> 指定')
     process.exit(1)
   }
@@ -95,6 +99,7 @@ function describe(comp) {
 // ---------- list ----------
 function cmdList() {
   checkProject()
+  console.log(`目标项目: ${PROJECT}（${resolved.source}）`)
   for (const c of components) {
     const mark = isInstalled(c) ? '已装' : '未装'
     console.log(`  ${mark}  ${describe(c)}`)
@@ -183,6 +188,7 @@ function cmdUninstall() {
     console.error('[toolkit] 用法: node scripts/install.js uninstall <组件名...>')
     process.exit(1)
   }
+  console.log(`目标项目: ${PROJECT}（${resolved.source}）`)
   for (const n of names) {
     if (!map[n]) {
       console.error(`[toolkit] 未知组件: ${n}`)

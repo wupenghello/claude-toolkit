@@ -1,17 +1,36 @@
 #!/usr/bin/env node
-// 一键安装/更新 sys-login-mcp 到指定项目（默认 D:\projects\wbscf-web）。幂等，可重复执行。
+// 一键安装/更新 sys-login-mcp 到指定项目（默认按平台/同级目录自动解析）。幂等，可重复执行。
 // 做五件事：装依赖 → CNN 权重检查 → 配置账号（可交互式填入）→ 注册项目级 MCP → 部署项目级 skill
 import { execSync } from 'node:child_process'
 import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import readline from 'node:readline/promises'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, '..')
+const TOOLKIT_ROOT = path.join(ROOT, '..', '..')
 
+// 默认项目解析：在 toolkit 仓库内用共享实现（lib/platform.js）；
+// 本包被单独拷走（不在 toolkit 布局）时就地兜底，规则与共享实现一致，探测基准换成本包目录
+function fallbackProjectDir(baseRoot) {
+  const env = process.env.WBSCF_ROOT
+  if (env && fs.existsSync(env)) return env
+  const sibling = path.resolve(baseRoot, '..', 'wbscf-web')
+  if (fs.existsSync(sibling)) return sibling
+  return process.platform === 'win32' ? 'D:/projects/wbscf-web' : path.join(os.homedir(), 'projects', 'wbscf-web')
+}
+let defaultProjectDir = fallbackProjectDir
+let resolveBase = ROOT
+try {
+  ;({ defaultProjectDir } = await import('../../../lib/platform.js'))
+  resolveBase = TOOLKIT_ROOT
+} catch {
+  // 不在 toolkit 布局内：用就地实现，探测基准保持本包目录
+}
 const argProject = process.argv.find((a) => a.startsWith('--project='))
-const PROJECT = argProject ? argProject.slice('--project='.length) : 'D:/projects/wbscf-web'
+const PROJECT = argProject ? argProject.slice('--project='.length) : defaultProjectDir(resolveBase)
 
 const log = (m) => console.log(`[setup] ${m}`)
 
@@ -75,11 +94,11 @@ async function main() {
 
   // 2. CNN 权重（仓库已内置 weights.json；仅当缺失时才尝试从本机 captcha-ext 提取——那只是维护者重训后的更新途径）
   if (!fs.existsSync(path.join(ROOT, 'weights.json'))) {
-    log('weights.json 缺失（仓库应自带），尝试从 D:/projects/captcha-ext 提取...')
+    log('weights.json 缺失（仓库应自带），尝试从本机 captcha-ext 提取...')
     try {
       execSync('node tools/extract-weights.mjs', { cwd: ROOT, stdio: 'inherit' })
     } catch {
-      log('提取失败：需要 D:/projects/captcha-ext 存在。请从仓库重新获取 weights.json，或联系维护者。')
+      log('提取失败：captcha-ext 不在默认位置（macOS/Linux 用 CAPTCHA_EXT=<captcha-ext 目录> 环境变量指定）。请从仓库重新获取 weights.json，或联系维护者。')
     }
   } else {
     log('weights.json 已就绪（仓库内置；重训更新: npm run extract-weights）')

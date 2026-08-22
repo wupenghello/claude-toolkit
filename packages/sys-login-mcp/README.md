@@ -4,14 +4,14 @@ wbscf-web dev 环境自动登录 MCP server。解决 AI 做完需求后浏览器
 
 仅限 wbscf-web 项目使用（MCP 注册在项目 `.mcp.json`，skill 部署在项目 `.claude/skills/`）。
 
-**跨平台**：Windows / macOS / Linux 均可（纯 Node，无平台专有依赖）。macOS/Linux 安装时必须传 `--project`（Windows 默认路径不适用）；`npm test` 的集成测试默认跳过本机不存在的外部项目，如有克隆可通过环境变量 `WBSCF_ROOT` / `EXT_TEST` 指定路径启用。
+**跨平台**：Windows / macOS / Linux 均可（纯 Node，无平台专有依赖）。目标项目默认自动解析（`WBSCF_ROOT` 环境变量 → 仓库同级 `wbscf-web` → 平台默认），不在默认位置时传 `--project=<路径>`；`npm test` 的集成测试默认跳过本机不存在的外部项目，如有克隆可通过环境变量 `WBSCF_ROOT` / `EXT_TEST` 指定路径启用。
 
 ## 快速开始
 
 ```bash
-git clone <本仓库> D:/tools/sys-login-mcp   # 克隆位置任意，但需记住（MCP 注册会指向这里的绝对路径）
-cd D:/tools/sys-login-mcp
-node scripts/setup.js --project=<你的 wbscf-web 路径>   # 如 D:/code/wbscf-web；不传则默认 D:/projects/wbscf-web
+git clone <本仓库> ~/tools/claude-toolkit   # 克隆位置任意，但需记住（MCP 注册会指向这里的绝对路径）
+cd ~/tools/claude-toolkit/packages/sys-login-mcp
+node scripts/setup.js   # 目标项目默认自动解析；不在默认位置时加 --project=<你的 wbscf-web 路径>
 ```
 
 setup 会交互式询问测试账号（别名/手机号/密码/备注），结束打印"下一步"清单，正常流程只有三步：
@@ -69,11 +69,11 @@ npm run extract-weights # 插件重训后更新权重
 
 ## 维护
 
-- **后端验证码样式变更**（CNN 失效）：需维护者按 `D:\projects\captcha-ext\README.md`「后端验证码变更时」重训并导出，然后 `npm run extract-weights` 更新仓库内的 `weights.json` 并推送——其他使用者直接拉取即可，无需接触训练管线。
+- **后端验证码样式变更**（CNN 失效）：需维护者按 captcha-ext 的 README「后端验证码变更时」重训并导出（captcha-ext 位置不在默认处的机器用 `CAPTCHA_EXT=<目录>` 环境变量指定），然后 `npm run extract-weights` 更新仓库内的 `weights.json` 并推送——其他使用者直接拉取即可，无需接触训练管线。
 - **登录接口变更**（参数/路径/加密方式）：改 `lib/login-core.js` / `lib/crypto.js`，对照 wbscf-web 的 `apps/*/src/api/core/auth.ts`，同步更新 `test/unit.test.mjs` 的已知向量。
 - **新增应用或端口变更**：改 `lib/config.js` 的 `APPS` 表 + wbscf-web 的 `.claude/launch.json`。
 - **CI 无外部依赖也能跑**：集成测试在缺少 wbscf-web / captcha-ext-test 时自动 skip，只剩单元测试。
 
 ## 注册方式（setup 已自动完成）
 
-MCP：wbscf-web 项目 `.mcp.json` 的 `sys-login` 条目（command `node`，args 指向本项目 `index.js`）。Skill：`D:\projects\wbscf-web\.claude\skills\sys-login\`。修改后需重启 Claude Code 会话生效。
+MCP：wbscf-web 项目 `.mcp.json` 的 `sys-login` 条目（command `node`，args 指向本项目 `index.js`）。Skill：目标项目的 `.claude/skills/sys-login/`。修改后需重启 Claude Code 会话生效。
