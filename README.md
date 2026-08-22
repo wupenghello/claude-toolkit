@@ -23,6 +23,7 @@ AI 拿到后会自己完成「下载 → 装依赖 → 装工具 → 验证」�
 | Apifox 接口文档（apifox） | 查后端接口的参数、返回值，不用翻网页 |
 | 脚手架（mcp-scaffold） | 以后做新工具时的标准模板 |
 | Git 规范（git） | 提交信息、分支怎么建，按团队规范来 |
+| 周报（weekly-report） | 自动拉禅道任务/bug + git 提交，整理成本周工作总结 |
 
 这些工具装好之后**自动就生效了**——你对 AI 说「登录 erp」「看看 bug-7551」，AI 自己就会用对应工具，你平时根本不用碰这个仓库。
 
@@ -77,7 +78,8 @@ packages/           工具的代码都在这
 ├─ sys-login-mcp/     自动登录工具
 ├─ apifox-mcp/         接口文档工具
 ├─ skills/mcp-scaffold/  做新工具的模板
-└─ skills/git/          Git 提交规范
+├─ skills/git/          Git 提交规范
+└─ skills/weekly-report/  周报生成
 ```
 
 ## 不想看技术细节的话

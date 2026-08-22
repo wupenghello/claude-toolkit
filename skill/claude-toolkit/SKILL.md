@@ -101,6 +101,7 @@ registry 条目完整示例（MCP + skill 组件）：
 | `apifox` | MCP + skill | Apifox 接口文档（ERP + 物泊智链，读 OAS / $ref / 刷新） |
 | `mcp-scaffold` | skill | 工程化 MCP 脚手架（做新 MCP 时的标准流程） |
 | `git` | skill | Git 提交规范（Conventional Commits + commitlint + wbscf-web 分支模型） |
+| `weekly-report` | skill | 个人周报生成（禅道任务/bug + git 提交交叉验证，依赖 `zentao`） |
 | `claude-toolkit` | skill | 本指南（组件管理接入指南） |
 
 ## 7. 安装后怎么确认成功

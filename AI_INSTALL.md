@@ -2,7 +2,7 @@
 
 把这份文档交给你的 AI 助理（Claude Code / Cursor / 任意 ReAct agent），它就能自动完成安装、配置、验证，**无需你手敲任何命令**。
 
-装完之后，AI 就能：在验证 wbscf-web 页面时自动登录系统（`sys-login`）、拉取禅道任务/bug（`zentao`）、按标准流程新建工具（`mcp-scaffold`）。
+装完之后，AI 就能：在验证 wbscf-web 页面时自动登录系统（`sys-login`）、拉取禅道任务/bug（`zentao`）、按标准流程新建工具（`mcp-scaffold`）、生成个人周报（`weekly-report`）。
 
 ## 0. 前置检查（AI 先确认，缺什么让用户装）
 
@@ -70,7 +70,7 @@ toolkit install --all --project=<目标项目绝对路径>
 toolkit list
 ```
 
-应显示 6 个组件都「已装」：zentao、sys-login、apifox、mcp-scaffold、git、claude-toolkit。
+应显示 7 个组件都「已装」：zentao、sys-login、apifox、mcp-scaffold、git、weekly-report、claude-toolkit。
 
 ## 7. 重启 Claude Code 会话
 
@@ -85,6 +85,7 @@ toolkit list
 - 「看看 bug-7551 / 拉禅道任务」→ 触发 zentao
 - 「做个新 MCP」→ 触发 mcp-scaffold
 - 「提交 / commit」→ 触发 git（按团队规范提交）
+- 「写周报 / 本周总结」→ 触发 weekly-report（拉禅道 + git 提交生成周报）
 - 「查某接口参数 / 返回值」→ 触发 apifox（接口文档）
 - 「装/卸/加组件」→ 触发 claude-toolkit skill（组件管理）
 

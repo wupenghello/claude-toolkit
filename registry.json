@@ -64,6 +64,14 @@
       "dependsOn": []
     },
     {
+      "name": "weekly-report",
+      "description": "个人周报生成 skill（禅道任务/bug + git 提交交叉验证，按本周完成/进行中/下周计划整理成纯文本）",
+      "provides": {
+        "skills": [{ "name": "weekly-report", "from": "packages/skills/weekly-report" }]
+      },
+      "dependsOn": ["zentao"]
+    },
+    {
       "name": "claude-toolkit",
       "description": "组件统一管理 skill（给 AI 的接入指南：装/卸/加组件、依赖关系）",
       "provides": {
